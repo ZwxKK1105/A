@@ -83,6 +83,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "TargetLook")
 	UInputMappingContext* TargetLockMappingContext;
 
+	UPROPERTY(EditDefaultsOnly, Category = "TargetLook")
+	float TargetLocketCameraOffestDistance = 20.f;
+
 	UPROPERTY()
 	TArray<AActor*> AvailableActorsToLock;
 
