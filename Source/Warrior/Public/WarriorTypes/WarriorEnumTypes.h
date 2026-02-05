@@ -21,3 +21,33 @@ enum class EWarriorSuccessType :uint8
 	Successful,
 	Failed
 };
+
+UENUM()
+enum class EWarriorCountDownActionInput :uint8
+{
+	Start,
+	Cancel
+};
+
+UENUM()
+enum class EWarriorCountDownActionOutPut :uint8
+{
+	Updated,
+	Completed,
+	Cancelled
+};
+
+
+UENUM()
+enum class EWarriorGameDifficulty :uint8
+{
+	Easy,
+	Normal,
+	Hard,
+	VeryHard
+};
+
+
+
+
+
