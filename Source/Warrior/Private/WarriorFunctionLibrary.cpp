@@ -9,7 +9,9 @@
 #include"Kismet/KismetMathLibrary.h"
 #include "WarriorGameplayTags.h"
 #include "WarriorTypes/WarriorCountDownAction.h"
-
+#include "WarriorGameInstance.h"
+#include"Kismet/GameplayStatics.h"
+#include"SaveGame/WarrriorSaveGame.h"
 
 #include "WarriorDebugHelper.h"
 
@@ -198,5 +200,87 @@ void UWarriorFunctionLibrary::CountDown(const UObject* WorldContextObject, float
 }
 
 
+UWarriorGameInstance* UWarriorFunctionLibrary::GetWarriorGameInstance(const UObject* WorldContextObject)
+{
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			return World->GetGameInstance<UWarriorGameInstance>();
+		}
+		
+	}
 
+	return nullptr;
+}
+
+void UWarriorFunctionLibrary::ToggleInputMode(const UObject* WorldContextObject, EWarriorInputMode InInputMode)
+{
+	APlayerController* PlayerController = nullptr;
+
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			PlayerController = World->GetFirstPlayerController();
+		}
+	}
+
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	FInputModeGameOnly GameOnlyMode;
+	FInputModeGameOnly UIOnlyMode;
+
+	switch (InInputMode)
+	{
+	case EWarriorInputMode::GameOnly:
+		PlayerController->SetInputMode(GameOnlyMode);
+		PlayerController->bShowMouseCursor = false;
+		break;
+	case EWarriorInputMode::UIOnly:
+		PlayerController->SetInputMode(UIOnlyMode);
+		PlayerController->bShowMouseCursor = true;
+		break;
+	
+
+	default:
+		break;
+	}
+
+}
+
+void UWarriorFunctionLibrary::SaveCurrentGameDifficulty(EWarriorGameDifficulty InDifficultyToSave)
+{
+	USaveGame* SaveGameIObject = UGameplayStatics::CreateSaveGameObject(UWarrriorSaveGame::StaticClass());
+
+	if (UWarrriorSaveGame* WarriorSaveGameObject = Cast<UWarrriorSaveGame>(SaveGameIObject))
+	{
+		WarriorSaveGameObject->SavedCurrentGameDifficulty = InDifficultyToSave;
+		const bool bWasSaved=UGameplayStatics::SaveGameToSlot(WarriorSaveGameObject,WarriorGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(),0);
+
+		Debug::Print(bWasSaved ? TEXT("Saved") : TEXT("not Saved"));
+	}
+
+
+}
+
+bool UWarriorFunctionLibrary::TryLoadSavedGameDifficulty(EWarriorGameDifficulty& OutSavedDifficulty)
+{
+	if (UGameplayStatics::DoesSaveGameExist(WarriorGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0))
+	{
+		USaveGame* LoadedSaveGameObject = UGameplayStatics::LoadGameFromSlot(WarriorGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+		if (UWarrriorSaveGame* WarriorSaveGameObject = Cast<UWarrriorSaveGame>(LoadedSaveGameObject))
+		{
+			OutSavedDifficulty = WarriorSaveGameObject->SavedCurrentGameDifficulty;
+
+			Debug::Print(TEXT("Loading Successful"), FColor::Green);
+			return true;
+		}
+	}
+
+	return false;
+}
 

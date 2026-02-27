@@ -12,7 +12,7 @@ void UWarriorGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* Act
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
 
-	if (AbilityActivationPolicy == EWarriotAbilityActivation::OnGiven)
+	if (AbilityActivationPolicy == EWarriorAbilityActivation::OnGiven)
 	{
 		if (ActorInfo && !Spec.IsActive())
 		{
@@ -26,7 +26,7 @@ void UWarriorGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	if (AbilityActivationPolicy == EWarriotAbilityActivation::OnGiven)
+	if (AbilityActivationPolicy == EWarriorAbilityActivation::OnGiven)
 	{
 		if (ActorInfo)
 		{

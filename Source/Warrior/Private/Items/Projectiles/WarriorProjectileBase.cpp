@@ -70,7 +70,7 @@ void AWarriorProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, 
 
 	if (bIsPlayerBlocking)
 	{
-		bIsValidBlock=UWarriorFunctionLibrary::IsValidBlock(this, HitPawn);
+		bIsValidBlock = UWarriorFunctionLibrary::IsValidBlock(this, HitPawn);
 	}
 
 	FGameplayEventData Data;
@@ -85,11 +85,14 @@ void AWarriorProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, 
 			WarriorGameplayTags::Player_Event_SuccessfulBlock,
 			Data
 		);
+
+		//Debug::Print(TEXT("Successful Block!"), FColor::Green);
 	}
 	else
 	{
 		//应用投射物伤害
 		HandleApplyProjectileDamage(HitPawn, Data);
+		//Debug::Print(TEXT("Failed Block!"), FColor::Green);
 	}
 
 
@@ -104,7 +107,8 @@ void AWarriorProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* Overl
 	{
 		return;
 	}
-	OverlappedActors.Add(OtherActor);
+
+	OverlappedActors.AddUnique(OtherActor);
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
@@ -115,7 +119,7 @@ void AWarriorProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* Overl
 
 		if (UWarriorFunctionLibrary::IsTargetPawnHostile(GetInstigator(), HitPawn))
 		{
-			HandleApplyProjectileDamage(HitPawn,Data );
+			HandleApplyProjectileDamage(HitPawn,Data);
 		}
 		
 	}

@@ -11,7 +11,7 @@ class UPawnCombatComponent;
 class UWarriorAbilitySystemComponent;
 
 UENUM(BlueprintType)
-enum class EWarriotAbilityActivation : uint8
+enum class EWarriorAbilityActivation : uint8
 {
 	OnTriggered,
 	OnGiven
@@ -32,7 +32,7 @@ protected:
 	//~ End UGameplayAbility Interface
 
 	UPROPERTY(EditDefaultsOnly,Category="WarriorAbility")
-	EWarriotAbilityActivation AbilityActivationPolicy = EWarriotAbilityActivation::OnTriggered;
+	EWarriorAbilityActivation AbilityActivationPolicy = EWarriorAbilityActivation::OnTriggered;
 	
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	UPawnCombatComponent* GetPawnCombatComponentFromActorInfo()const;

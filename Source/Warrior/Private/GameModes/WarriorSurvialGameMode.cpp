@@ -7,9 +7,22 @@
 #include"Kismet/GameplayStatics.h"
 #include "Engine/TargetPoint.h"
 #include "NavigationSystem.h"
-
+#include "WarriorFunctionLibrary.h"
 
 #include"WarriorDebugHelper.h"
+
+void AWarriorSurvialGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+	
+	EWarriorGameDifficulty SavedGameDiffculty;
+
+	if (UWarriorFunctionLibrary::TryLoadSavedGameDifficulty(SavedGameDiffculty))
+	{
+		CurrentGameDifficulty = SavedGameDiffculty;
+	}
+
+}
 
 void AWarriorSurvialGameMode::BeginPlay()
 {
@@ -24,13 +37,13 @@ void AWarriorSurvialGameMode::BeginPlay()
 	PreLoadNextWaveEnemies();
 }
 
-void AWarriorSurvialGameMode::Tick(float DeltaSeconds)
+void AWarriorSurvialGameMode::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaSeconds);
+	Super::Tick(DeltaTime);
 
 	if (CurrentSurvialGameModeState == EWarriorSurvialGameModeState::WaitSpawnNewWave)
 	{
-		TimePossedSinceStart += DeltaSeconds;
+		TimePossedSinceStart += DeltaTime;
 
 		if (TimePossedSinceStart >= SpawnNewWaveWaitTime)
 		{
@@ -42,7 +55,7 @@ void AWarriorSurvialGameMode::Tick(float DeltaSeconds)
 
 	if (CurrentSurvialGameModeState == EWarriorSurvialGameModeState::SpawningNewWave)
 	{
-		TimePossedSinceStart += DeltaSeconds;
+		TimePossedSinceStart += DeltaTime;
 
 		if (TimePossedSinceStart >= SpawnEnemiesDelayTime)
 		{
@@ -57,7 +70,7 @@ void AWarriorSurvialGameMode::Tick(float DeltaSeconds)
 
 	if (CurrentSurvialGameModeState == EWarriorSurvialGameModeState::WaveCompleted)
 	{
-		TimePossedSinceStart += DeltaSeconds;
+		TimePossedSinceStart += DeltaTime;
 
 		if (TimePossedSinceStart >= WaveCompletedWaitTime)
 		{

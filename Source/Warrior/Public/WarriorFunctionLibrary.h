@@ -9,7 +9,7 @@
 
 class UWarriorAbilitySystemComponent;
 class UPawnCombatComponent;
-
+class UWarriorGameInstance;
 struct FScalableFloat;
 
 
@@ -61,6 +61,17 @@ public:
 		float& OutRemainingTime, EWarriorCountDownActionInput CountDownInput, 
 		UPARAM(DisplayName="Output")EWarriorCountDownActionOutPut& CountDownOutput, FLatentActionInfo LatentInfo);
 
+	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary", meta=(WorldContext="WorldContextObject"))
+	static UWarriorGameInstance* GetWarriorGameInstance(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary", meta = (WorldContext = "WorldContextObject"))
+	static void ToggleInputMode(const UObject* WorldContextObject,EWarriorInputMode InInputMode);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
+	static void SaveCurrentGameDifficulty(EWarriorGameDifficulty InDifficultyToSave);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
+	static bool TryLoadSavedGameDifficulty(EWarriorGameDifficulty& OutSavedDifficulty);
 
 
 };
